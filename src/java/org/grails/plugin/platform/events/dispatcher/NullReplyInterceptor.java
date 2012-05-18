@@ -38,7 +38,8 @@ public class NullReplyInterceptor implements ChannelInterceptor {
 
 
     public Message<?> preSend(Message<?> message, MessageChannel messageChannel) {
-        if (message.getHeaders().get(SpringIntegrationEventsRegistry.GORM_EVENT_KEY) == null) {
+        if (message.getHeaders().get(SpringIntegrationEventsRegistry.GORM_EVENT_KEY) == null &&
+                message.getHeaders().getReplyChannel() != null) {
             ((PollableChannel) message.getHeaders().getReplyChannel()).send(new GenericMessage<TrackableNullResult>(new TrackableNullResult()));
         }
         return message;
